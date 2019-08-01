@@ -4,6 +4,7 @@
     <data-source source="LOCAL" name="atividade1@localhost" uuid="54bf7857-b30e-4d1d-9c23-6e7702ffd314">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
+      <configured-by-url>true</configured-by-url>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5433/atividade1</jdbc-url>
     </data-source>
