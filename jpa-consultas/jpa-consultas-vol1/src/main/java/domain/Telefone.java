@@ -48,4 +48,9 @@ public class Telefone implements Serializable {
     public void setProfessor(Professor professor) {
         this.professor = professor;
     }
+
+    @Override
+    public String toString() {
+        return  numero;
+    }
 }

@@ -18,7 +18,7 @@ public class Livro implements Serializable {
     private String ISBN;
     private String nome;
     @Temporal(TemporalType.DATE)
-    private Date lançamento;
+    private Date lancamento;
 
     @ManyToMany(mappedBy = "livros")
     private List<Autor> autores;
@@ -26,10 +26,10 @@ public class Livro implements Serializable {
     public Livro() {
     }
 
-    public Livro(String ISBN, String nome, Date lançamento, List<Autor> autores) {
+    public Livro(String ISBN, String nome, Date lancamento, List<Autor> autores) {
         this.ISBN = ISBN;
         this.nome = nome;
-        this.lançamento = lançamento;
+        this.lancamento = lancamento;
         this.autores = autores;
     }
 
@@ -50,11 +50,11 @@ public class Livro implements Serializable {
     }
 
     public Date getLançamento() {
-        return lançamento;
+        return lancamento;
     }
 
     public void setLançamento(Date lançamento) {
-        this.lançamento = lançamento;
+        this.lancamento = lançamento;
     }
 
     public List<Autor> getAutores() {

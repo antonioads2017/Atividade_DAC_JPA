@@ -34,4 +34,12 @@ public class Professor extends Pessoa  {
     public void setSalario(Double salario) {
         this.salario = salario;
     }
+
+    public List<Telefone> getTelefones() {
+        return telefones;
+    }
+
+    public void setTelefones(List<Telefone> telefones) {
+        this.telefones = telefones;
+    }
 }
