@@ -10,15 +10,16 @@ public class Area implements Serializable {
     private int cod;
     private String nome;
 
+    @Id
     @ManyToOne
-    @JoinTable(name="area_publicacao",
-            joinColumns = {@JoinColumn(name = "area_id",referencedColumnName = "cod")},
-            inverseJoinColumns = {@JoinColumn(name="publicacao_id",referencedColumnName = "codPublicacao")})
+    @JoinColumn(name = "publicacao_id")
     private Publicacao publicacao;
 
-    public Area(int cod, String nome) {
+    public Area(int cod, String nome, Publicacao publicacao) {
         this.cod = cod;
         this.nome = nome;
+        this.publicacao=publicacao;
+
     }
 
     public Area() {

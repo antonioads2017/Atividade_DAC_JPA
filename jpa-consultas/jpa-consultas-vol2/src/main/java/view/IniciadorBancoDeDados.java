@@ -53,52 +53,69 @@ public class IniciadorBancoDeDados {
                     7,
                     new ArrayList<>()
             )
-
-    };
-
-    private Area[] areas = {
-            new Area(
-                    101,
-                    "Industria"
-            ),
-            new Area(
-                    110,
-                    "Tecnologia"
-            ),
-            new Area(
-                    135,
-                    "Entretenimento"
-            )
     };
 
     private Publicacao[] publicacoes = {
             new Publicacao(
                     2022,
                     "Java Enterprise - EJB",
-                    Arrays.asList(areas[1]),
+                    new ArrayList<>(),
                     revisores[0],
                     escritores[2]
             ),
             new Publicacao(
                     2051,
                     "Postgres - O melhor banco de dados",
-                    Arrays.asList(areas[0],areas[1]),
+                    new ArrayList<>(),
                     revisores[1],
                     escritores[0]
             ),
             new Publicacao(
                     3080,
                     "Harry Potter tera continuacao?",
-                    Arrays.asList(areas[2]),
+                    new ArrayList<>(),
                     revisores[1],
                     escritores[2]
             ),
             new Publicacao(
                     5587,
                     "Novo PS5",
-                    Arrays.asList(areas[1],areas[2]),
+                    new ArrayList<>(),
                     revisores[0],
                     escritores[1]
+            )
+    };
+
+    private Area[] areas = {
+            new Area(
+                    101,
+                    "Industria",
+                    publicacoes[1]
+            ),
+            new Area(
+                    110,
+                    "Tecnologia",
+                    publicacoes[0]
+            ),
+            new Area(
+                    110,
+                    "Tecnologia",
+                    publicacoes[1]
+            ),
+            new Area(
+                    110,
+                    "Tecnologia",
+                    publicacoes[3]
+            ),
+            new Area(
+                    135,
+                    "Entretenimento",
+                    publicacoes[2]
+            ),
+            new Area(
+                    135,
+                    "Entretenimento",
+                    publicacoes[3]
             )
     };
 
@@ -116,11 +133,11 @@ public class IniciadorBancoDeDados {
         for(Escritor escritor:escritores){
             em.persist(escritor);
         }
-        for(Area area:areas){
-            em.persist(area);
-        }
         for(Publicacao publicacao:publicacoes){
             em.persist(publicacao);
+        }
+        for(Area area:areas){
+            em.persist(area);
         }
         em.getTransaction().commit();
     }
