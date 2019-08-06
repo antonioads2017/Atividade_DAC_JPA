@@ -2,11 +2,12 @@ package domain;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Escritor extends Pessoa {
+public class Escritor extends Pessoa implements Serializable {
 
     private int premios;
 

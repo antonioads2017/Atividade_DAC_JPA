@@ -1,7 +1,11 @@
 package view;
 
+import domain.Publicacao;
+import domain.Revisor;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.*;
 
 public class AppCriteria2 {
     public static void main(String[] args) {
@@ -13,7 +17,7 @@ public class AppCriteria2 {
 
 //        letraA(em);
 //        letraB(em);
-//        letraC(em);
+//        letraC(em); //Feito
 //        letraD(em);
     }
 
@@ -29,6 +33,17 @@ public class AppCriteria2 {
 
     //O nome dos Revisores que possuem alguma publicação começando com Java.
     private static void letraC(EntityManager em) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<String> criteria = builder.createQuery(String.class);
+        Root<Revisor> root = criteria.from(Revisor.class);
+        Join<Revisor, Publicacao> join = root.join("publicacoes");
+        Predicate predicate = builder.like(builder.lower(join.get("titulo")),"java%");
+        criteria.where(predicate).select(root.get("nome"));
+        em.createQuery(criteria).getResultList().forEach(
+                System.out::println
+        );
+
+
     }
 
     //O nome e a quantidade de Publicações escritas por Escritores com mais que três
