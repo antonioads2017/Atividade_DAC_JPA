@@ -1,5 +1,7 @@
 package view;
 
+import domain.Area;
+import domain.Escritor;
 import domain.Publicacao;
 import domain.Revisor;
 
@@ -16,9 +18,9 @@ public class AppCriteria2 {
         new IniciadorBancoDeDados(em).dadosIniciais();
 
 //        letraA(em);
-//        letraB(em);
+//        letraB(em); //Feito
 //        letraC(em); //Feito
-//        letraD(em);
+//        letraD(em); //Feito
     }
 
     //O nome da pessoa, o título da publicação e o nome da área em que a pessoa tem o
@@ -29,6 +31,23 @@ public class AppCriteria2 {
     //O título da publicação e o nome do revisor que tenham alguma publicação na área
     //de indústria.
     private static void letraB(EntityManager em) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteria = builder.createQuery(Object[].class);
+        Root<Revisor> root = criteria.from(Revisor.class);
+
+        Join<Revisor,Publicacao> revisorPublicacaoJoin = root.join("publicacoes");
+        Join<Publicacao, Area> publicacaoAreaJoin = revisorPublicacaoJoin.join("areas");
+
+        Predicate area = builder.like(builder.lower(publicacaoAreaJoin.get("nome")),"%industria%");
+
+        criteria.multiselect(revisorPublicacaoJoin.get("titulo"),
+                root.get("nome"))
+                .where(area);
+        em.createQuery(criteria).getResultList().forEach(
+                p-> System.out.println("Publicação: "+p[0]+"\nRevisor: "+p[1]+"\n")
+        );
+
+
     }
 
     //O nome dos Revisores que possuem alguma publicação começando com Java.
@@ -49,5 +68,21 @@ public class AppCriteria2 {
     //O nome e a quantidade de Publicações escritas por Escritores com mais que três
     //prêmios.
     private static void letraD(EntityManager em) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteria = builder.createQuery(Object[].class);
+        Root<Escritor> root = criteria.from(Escritor.class);
+        Join<Escritor,Publicacao> join = root.join("publicacoes");
+
+        Predicate maiorQue3 = builder.gt(root.get("premios"),3);
+
+        criteria.multiselect(root.get("nome"),builder.count(join))
+                .where(maiorQue3)
+                .groupBy(root.get("nome"));
+
+        em.createQuery(criteria).getResultList().forEach(
+                e-> System.out.println("Escritor: "+e[0]+" com "+e[1]+" publicação(ões)")
+        );
+
+
     }
 }
