@@ -17,7 +17,7 @@ public class AppCriteria2 {
                 .createEntityManager();
         new IniciadorBancoDeDados(em).dadosIniciais();
 
-//        letraA(em);
+//        letraA(em); //Feito
 //        letraB(em); //Feito
 //        letraC(em); //Feito
 //        letraD(em); //Feito
@@ -26,6 +26,28 @@ public class AppCriteria2 {
     //O nome da pessoa, o título da publicação e o nome da área em que a pessoa tem o
     //atributo id igual a 3.
     private static void letraA(EntityManager em) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteria = builder.createQuery(Object[].class);
+
+        Root<Revisor> rootR = criteria.from(Revisor.class);
+        Root<Escritor> rootE = criteria.from(Escritor.class);
+
+        Join<Escritor,Publicacao> escritorPublicacaoJoin = rootE.join("publicacoes");
+        Join<Publicacao,Area> publicacaoAreaJoin2 = escritorPublicacaoJoin.join("areas");
+
+        Join<Revisor,Publicacao> revisorPublicacaoJoin = rootR.join("publicacoes");
+        Join<Publicacao,Area> publicacaoAreaJoin1 = revisorPublicacaoJoin.join("areas");
+
+        Predicate predicateE = builder.equal(rootE.get("id"),3);
+        Predicate predicateR = builder.equal(rootR.get("id"),3);
+
+        criteria.where(builder.or(predicateE,predicateR)).multiselect(rootE.get("nome"),escritorPublicacaoJoin.get("titulo"),
+                publicacaoAreaJoin2.get("nome")).multiselect(rootR.get("nome"),revisorPublicacaoJoin.get("titulo"),
+                publicacaoAreaJoin1.get("nome")).distinct(true);
+        em.createQuery(criteria).getResultList().forEach(
+                p-> System.out.println("Nome: "+p[0]+"\nPublicação: "+p[1]+"\nArea: "+p[2]+"\n")
+        );
+
     }
 
     //O título da publicação e o nome do revisor que tenham alguma publicação na área
