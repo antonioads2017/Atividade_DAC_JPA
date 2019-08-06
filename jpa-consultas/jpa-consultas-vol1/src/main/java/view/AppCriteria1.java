@@ -17,7 +17,7 @@ public class AppCriteria1 {
         new IniciandorBancoDados(em).dadosIniciais();
         
 //        letraA(em); //Feito
-//        letraB(em); //Feito
+        letraB(em); //Feito
 //        letraC(em); //Feito
 //        letraD(em); //Feito
 //        letraE(em); //Feito
@@ -29,10 +29,17 @@ public class AppCriteria1 {
     private static void letraA(EntityManager em) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Livro> criteria = builder.createQuery(Livro.class);
-        Root<Livro> root = criteria.from(Livro.class);
-        Join<Livro, Autor> join = root.join("autores",JoinType.LEFT);
+        Subquery<Autor> subquery = criteria.subquery(Autor.class);
+
+        Root<Livro> root = subquery.from(Livro.class);
+        Join<Livro, Autor> join = root.join("autores");
+
         Predicate date = builder.notEqual(join.get("dataNascimento"),"1982-11-21");
-        criteria.distinct(true).where(date);
+
+        subquery.select(join).where(date);
+
+        criteria.select(root).where(builder.exists(subquery));
+
         em.createQuery(criteria).getResultList().forEach(
                 l-> System.out.println(l.getNome())
         );
@@ -44,10 +51,12 @@ public class AppCriteria1 {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Professor> criteria = builder.createQuery(Professor.class);
         Root<Professor> root = criteria.from(Professor.class);
-        Join<Professor, Telefone> join = root.join("telefones",JoinType.LEFT);
-        Predicate rua = builder.equal(root.get("endereco").get("rua"),"Que atividade facil");
-        Predicate telefone = builder.isNotNull(join.get("numero"));
-        criteria.where(rua,telefone).distinct(true);
+        Join<Professor, Endereco> join = root.join("endereco");
+
+        Predicate telefone = builder.isNotEmpty(root.get("telefones"));
+        Predicate rua = builder.equal(join.get("rua"),"Que atividade facil");
+
+        criteria.select(root).where(telefone,rua);
         TypedQuery<Professor> query = em.createQuery(criteria);
         query.getResultList().forEach(
                 p-> System.out.println(p.getNome())
