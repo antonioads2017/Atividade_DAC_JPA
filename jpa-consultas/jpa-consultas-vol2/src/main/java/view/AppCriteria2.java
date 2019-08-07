@@ -23,27 +23,21 @@ public class AppCriteria2 {
 //        letraD(em); //Feito
     }
 
-    //O nome da pessoa, o título da publicação e o nome da área em que a pessoa tem o
+    //O nome do escritor, o título da publicação e o nome da área em que o escritor tem o
     //atributo id igual a 3.
     private static void letraA(EntityManager em) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Object[]> criteria = builder.createQuery(Object[].class);
+        Root<Escritor> root = criteria.from(Escritor.class);
 
-        Root<Revisor> rootR = criteria.from(Revisor.class);
-        Root<Escritor> rootE = criteria.from(Escritor.class);
+        Join<Escritor,Publicacao> escritorPublicacaoJoin = root.join("publicacoes");
+        Join<Publicacao,Area> publicacaoAreaJoin = escritorPublicacaoJoin.join("areas");
 
-        Join<Escritor,Publicacao> escritorPublicacaoJoin = rootE.join("publicacoes");
-        Join<Publicacao,Area> publicacaoAreaJoin2 = escritorPublicacaoJoin.join("areas");
+        Predicate id = builder.equal(root.get("id"),3);
 
-        Join<Revisor,Publicacao> revisorPublicacaoJoin = rootR.join("publicacoes");
-        Join<Publicacao,Area> publicacaoAreaJoin1 = revisorPublicacaoJoin.join("areas");
+        criteria.where(id).multiselect(root.get("nome"),escritorPublicacaoJoin.get("titulo"),
+                publicacaoAreaJoin.get("nome"));
 
-        Predicate predicateE = builder.equal(rootE.get("id"),3);
-        Predicate predicateR = builder.equal(rootR.get("id"),3);
-
-        criteria.where(builder.or(predicateE,predicateR)).multiselect(rootE.get("nome"),escritorPublicacaoJoin.get("titulo"),
-                publicacaoAreaJoin2.get("nome")).multiselect(rootR.get("nome"),revisorPublicacaoJoin.get("titulo"),
-                publicacaoAreaJoin1.get("nome")).distinct(true);
         em.createQuery(criteria).getResultList().forEach(
                 p-> System.out.println("Nome: "+p[0]+"\nPublicação: "+p[1]+"\nArea: "+p[2]+"\n")
         );

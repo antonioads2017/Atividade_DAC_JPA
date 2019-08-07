@@ -23,12 +23,11 @@ public class AppJPQL2 {
 //        letraD(em); //Feito
     }
 
-    //O nome da pessoa, o título da publicação e o nome da área em que a pessoa tem o
+    //O nome do escritor, o título da publicação e o nome da área em que o escritor tem o
     //atributo id igual a 3.
     private static void letraA(EntityManager em) {
-        String jpql="SELECT r.nome, pu.titulo, a.nome FROM Revisor r, IN(r.publicacoes) pu, IN(pu.areas) a " +
-                "WHERE r.id=3 UNION SELECT e.nome, pu2.titulo, a2.nome FROM Escritor e, " +
-                "IN(e.publicacoes) pu2, IN(pu2.areas) a2 WHERE e.id=3";
+        String jpql="SELECT e.nome, pu.titulo, a.nome FROM Escritor e, " +
+                "IN(e.publicacoes) pu, IN(pu.areas) a WHERE e.id=3";
         TypedQuery<Object[]> query = em.createQuery(jpql,Object[].class);
         query.getResultList().forEach(
                 p-> System.out.println("Nome: "+p[0]+"\nPublicação: "+p[1]+"\nArea: "+p[2]+"\n")

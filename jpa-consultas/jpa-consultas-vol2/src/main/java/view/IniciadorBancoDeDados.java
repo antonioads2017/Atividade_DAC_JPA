@@ -15,7 +15,7 @@ public class IniciadorBancoDeDados {
 
     private Revisor[] revisores={
            new Revisor(
-                   3,
+                   5,
                    "Neil Gaiman",
                    Date.valueOf(LocalDate.of(1970,05,25)),
                    "Ótima",
@@ -47,7 +47,7 @@ public class IniciadorBancoDeDados {
                     new ArrayList<>()
             ),
             new Escritor(
-                    5,
+                    3,
                     "J. K. Rowling",
                     Date.valueOf(LocalDate.of(1965,7,31)),
                     7,
