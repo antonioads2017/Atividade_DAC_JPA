@@ -51,10 +51,9 @@ public class AppCriteria1 {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Professor> criteria = builder.createQuery(Professor.class);
         Root<Professor> root = criteria.from(Professor.class);
-        Join<Professor, Endereco> join = root.join("endereco");
 
         Predicate telefone = builder.isNotEmpty(root.get("telefones"));
-        Predicate rua = builder.equal(join.get("rua"),"Que atividade facil");
+        Predicate rua = builder.equal(root.get("endereco").get("rua"),"Que atividade facil");
 
         criteria.select(root).where(telefone,rua);
         TypedQuery<Professor> query = em.createQuery(criteria);
